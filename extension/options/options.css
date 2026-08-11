@@ -75,3 +75,7 @@
   font-size: 10.5px; color: var(--muted); padding: 0 2px;
 }
 .faint { color: var(--faint); }
+
+/* Der rechtliche Hinweis soll lesbar sein, aber nicht schreien. */
+.card.notice { border-color: var(--line); background: var(--surface); }
+.card.notice .help { margin-top: 0; }

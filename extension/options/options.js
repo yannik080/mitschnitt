@@ -1,11 +1,7 @@
 const el = (id) => document.getElementById(id);
 
-const HEIGHTS = [
-  { value: 0, label: 'Beste' }, { value: 2160, label: '2160p' },
-  { value: 1440, label: '1440p' }, { value: 1080, label: '1080p' },
-  { value: 720, label: '720p' }, { value: 480, label: '480p' },
-  { value: 360, label: '360p' },
-];
+const HEIGHTS = [2160, 1440, 1080, 720, 480, 360]
+  .map((value) => ({ value, label: `${value}p` }));
 const AUDIO = ['mp3', 'm4a', 'opus', 'flac', 'wav'];
 const CONTAINERS = ['mp4', 'mkv'];
 
@@ -21,7 +17,7 @@ const EXTRAS = [
 const BEHAVIOUR = [
   { key: 'autoResume', label: 'Nach Verbindungsabriss weitermachen' },
   { key: 'notify', label: 'Mitteilung wenn fertig' },
-  { key: 'replaceNativeButton', label: 'YouTubes Download-Button ersetzen' },
+  { key: 'replaceNativeButton', label: 'Vorhandenen Download-Button ersetzen' },
   { key: 'autoProbe', label: 'Formate beim Öffnen prüfen' },
 ];
 
@@ -96,7 +92,7 @@ function renderTools(info, error) {
     list.innerHTML = `<dt>Native Host</dt>
       <dd class="mono" data-state="missing">nicht erreichbar</dd>`;
     note.dataset.tone = 'error';
-    note.textContent = error || 'Führe install.sh im Projektordner aus.';
+    note.textContent = error || 'Starte die Einrichtung im Programmordner erneut.';
     return;
   }
 
@@ -119,8 +115,8 @@ function renderTools(info, error) {
 
   if (!info.ready) {
     note.dataset.tone = 'error';
-    note.textContent = 'Es fehlt ein Werkzeug. Installiere es mit: '
-      + 'brew install yt-dlp ffmpeg';
+    note.textContent = 'Es fehlt ein Werkzeug. Starte die Einrichtung im '
+      + 'Programmordner erneut — sie lädt es nach.';
   } else {
     note.dataset.tone = '';
     note.textContent = '';
@@ -183,11 +179,6 @@ async function init() {
   el('concurrentFragments').value = String(settings.concurrentFragments ?? 4);
   el('concurrentFragments').addEventListener('change', (event) => {
     save({ concurrentFragments: Number(event.target.value) });
-  });
-
-  el('cookiesFromBrowser').value = settings.cookiesFromBrowser || '';
-  el('cookiesFromBrowser').addEventListener('change', (event) => {
-    save({ cookiesFromBrowser: event.target.value });
   });
 
   renderChoice(el('height-chips'), HEIGHTS, settings.height,

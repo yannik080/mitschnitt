@@ -1,8 +1,8 @@
 {
-  "name": "youtube-downloader-extension",
+  "name": "mitschnitt",
   "version": "1.0.0",
   "private": true,
-  "description": "Chrome-Extension mit lokalem yt-dlp/ffmpeg-Downloader",
+  "description": "Chrome-Erweiterung mit lokalem yt-dlp/ffmpeg-Downloader",
   "scripts": {
     "test:host": "python3 tests/harness.py ping",
     "test:resume": "python3 tests/test_resume.py",

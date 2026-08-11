@@ -24,7 +24,6 @@ const DEFAULTS = {
   metadata: true,
   thumbnail: false,
   sponsorblock: false,
-  cookiesFromBrowser: '',
   concurrentFragments: 4,
   rateLimit: '',
   filenameTemplate: '%(title)s [%(id)s].%(ext)s',
@@ -85,13 +84,13 @@ function connect() {
 function humanizeHostError(raw) {
   const text = String(raw || '');
   if (/not found|Specified native messaging host not found/i.test(text)) {
-    return 'Der Native Host ist nicht registriert. Führe install.sh aus.';
+    return 'Der Native Host ist nicht registriert. Starte die Einrichtung erneut.';
   }
   if (/forbidden|not allowed/i.test(text)) {
-    return 'Der Native Host erlaubt diese Extension-ID nicht. Führe install.sh erneut aus.';
+    return 'Der Native Host erlaubt diese Extension-ID nicht. Starte die Einrichtung erneut.';
   }
   if (/Native host has exited|exited/i.test(text)) {
-    return 'Der Native Host wurde beendet. Details: ~/Library/Logs/YouTubeDownloader/host.log';
+    return 'Der Native Host wurde beendet. Details: ~/Library/Logs/Mitschnitt/host.log';
   }
   return text;
 }

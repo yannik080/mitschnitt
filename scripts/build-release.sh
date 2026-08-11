@@ -16,7 +16,7 @@ mkdir -p "$OUT"
 
 stage() {   # stage <system>
   local system="$1"
-  local dir="$OUT/stage-$system/YouTube-Downloader"
+  local dir="$OUT/stage-$system/Mitschnitt"
   mkdir -p "$dir"
 
   cp -R "$ROOT/extension" "$dir/"
@@ -54,12 +54,12 @@ write_readme() {   # write_readme <system> <ziel>
   fi
 
   cat > "$target" <<EOF
-YouTube Downloader
-==================
+Mitschnitt
+==========
 
-Ersetzt den Download-Button unter jedem YouTube-Video durch einen
-eigenen. Der Download läuft auf deinem Rechner, nichts geht über
-einen fremden Server.
+Ersetzt den Download-Button unter Videos durch einen eigenen. Der
+Download läuft auf deinem Rechner, nichts geht über einen fremden
+Server.
 
 
 SO GEHT ES
@@ -85,8 +85,8 @@ Schritt 2 — Erweiterung in Chrome laden
 
 Schritt 3 — Fertig
 
-  YouTube-Videoseite neu laden. Unter dem Video steht jetzt dein
-  eigener Download-Button.
+  Videoseite neu laden. Unter dem Video steht jetzt dein eigener
+  Download-Button.
 
 
 WICHTIG
@@ -94,6 +94,19 @@ WICHTIG
 
 Diesen Ordner nicht verschieben oder löschen. Chrome merkt sich den
 Ort. Wenn du ihn doch verschiebst, starte die Einrichtung erneut.
+
+
+WOFÜR DAS GEDACHT IST
+---------------------
+
+Für eigene Videos, frei lizenzierte Inhalte und Material, für das du
+die Rechte oder eine Erlaubnis hast.
+
+Die Nutzungsbedingungen von Videoplattformen untersagen das Herunter-
+laden in aller Regel. Nach der Rechtsprechung des OLG Hamburg (Urteil
+vom 21.11.2024, Az. 5 U 54/23) ist die Umgehung technischer Schutz-
+maßnahmen zudem nicht durch die Privatkopieschranke gedeckt. Was du
+mit diesem Werkzeug machst, liegt in deiner Verantwortung.
 
 
 WENN ETWAS NICHT GEHT
@@ -110,12 +123,12 @@ echo "Baue Version $VERSION"
 for system in macos windows; do
   dir="$(stage "$system")"
   # Ohne Version im Namen, damit der Link
-  #   .../releases/latest/download/YouTube-Downloader-macOS.zip
+  #   .../releases/latest/download/Mitschnitt-macOS.zip
   # dauerhaft funktioniert. Die Version steht im Release selbst.
   label="macOS"
   [ "$system" = "windows" ] && label="Windows"
-  name="YouTube-Downloader-$label.zip"
-  ( cd "$OUT/stage-$system" && zip -qr "$OUT/$name" "YouTube-Downloader" -x '*.DS_Store' )
+  name="Mitschnitt-$label.zip"
+  ( cd "$OUT/stage-$system" && zip -qr "$OUT/$name" "Mitschnitt" -x '*.DS_Store' )
   size="$(du -h "$OUT/$name" | cut -f1 | tr -d ' ')"
   echo "  $name  ($size)"
   rm -rf "$OUT/stage-$system"

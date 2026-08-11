@@ -1,8 +1,8 @@
 <div align="center">
 
-# YouTube Downloader
+# Mitschnitt
 
-**Ersetzt den Download-Button unter jedem YouTube-Video durch einen eigenen.**
+**Ersetzt den Download-Button unter Videos durch einen eigenen.**
 
 Der Download läuft auf deinem Rechner — über [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 und [FFmpeg](https://ffmpeg.org). Kein fremder Server, keine Wasserzeichen,
@@ -10,13 +10,25 @@ keine Wartezeit, keine Auflösungsgrenze.
 
 <br>
 
-### [⬇︎ Für macOS herunterladen](https://github.com/yannik080/youtube-downloader/releases/latest/download/YouTube-Downloader-macOS.zip) &nbsp;·&nbsp; [⬇︎ Für Windows herunterladen](https://github.com/yannik080/youtube-downloader/releases/latest/download/YouTube-Downloader-Windows.zip)
+### [⬇︎ Für macOS herunterladen](https://github.com/yannik080/mitschnitt/releases/latest/download/Mitschnitt-macOS.zip) &nbsp;·&nbsp; [⬇︎ Für Windows herunterladen](https://github.com/yannik080/mitschnitt/releases/latest/download/Mitschnitt-Windows.zip)
 
 <br>
 
-<img src="docs/panel-in-youtube.png" width="820" alt="Das Download-Panel geöffnet auf einer YouTube-Videoseite">
+<img src="docs/panel-in-youtube.png" width="820" alt="Das Download-Panel geöffnet auf einer Videoseite">
 
 </div>
+
+<br>
+
+> [!IMPORTANT]
+> **Wofür das gedacht ist.** Für eigene Videos, frei lizenzierte Inhalte und
+> Material, für das du die Rechte oder eine Erlaubnis hast.
+>
+> Die Nutzungsbedingungen von Videoplattformen untersagen das Herunterladen in
+> aller Regel. Nach der Rechtsprechung des OLG Hamburg (Urteil vom 21.11.2024,
+> Az. 5 U 54/23, seit Oktober 2025 rechtskräftig) ist die Umgehung technischer
+> Schutzmaßnahmen zudem **nicht** durch die Privatkopieschranke des § 53 UrhG
+> gedeckt. Was du mit diesem Werkzeug machst, liegt in deiner Verantwortung.
 
 <br>
 
@@ -67,8 +79,8 @@ Entwicklermodus. Drei Klicks:
 3. Links oben auf **Entpackte Erweiterung laden** klicken und den Ordner
    **`extension`** aus dem entpackten Verzeichnis auswählen
 
-Fertig. Eine YouTube-Videoseite neu laden — der Download-Button unter dem
-Video gehört ab jetzt dir.
+Fertig. Eine Videoseite neu laden — der Download-Button unter dem Video
+gehört ab jetzt dir.
 
 > **Den entpackten Ordner nicht verschieben oder löschen.** Chrome und die
 > Einrichtung merken sich den Ort. Zieht er doch um, einfach die Einrichtung
@@ -85,8 +97,8 @@ ausgegrauten Einträgen zeigt das Panel, was für dieses Video vorliegt.
 
 **Die Größenangabe stimmt.** Sie ist keine Schätzung: yt-dlp wird gefragt,
 welche Formate es nähme, und deren Größen werden addiert. Im Test weicht die
-Ankündigung um 0,3 % von der fertigen Datei ab. Keine Kleinigkeit — bei 1080p
-bietet YouTube dieselbe Auflösung in drei Codecs an, die um den Faktor zwei
+Ankündigung um 0,3 % von der fertigen Datei ab. Keine Kleinigkeit — dieselbe
+Auflösung wird oft in drei Codecs angeboten, die um den Faktor zwei
 auseinanderliegen.
 
 **Audio getrennt.** MP3, M4A, Opus, FLAC oder WAV, mit Cover und Metadaten.
@@ -117,7 +129,7 @@ mit **Fortsetzen** und **Verwerfen**.
 <div align="center">
 <img src="docs/popup.png" width="320" alt="Das Popup in der Symbolleiste">
 &nbsp;&nbsp;
-<img src="docs/button.png" width="400" alt="Der Button in YouTubes Leiste">
+<img src="docs/button.png" width="400" alt="Der Button in der Leiste unter dem Video">
 </div>
 
 <br>
@@ -130,15 +142,15 @@ Klick auf das Symbol in der Symbolleiste — dort steht, was fehlt.
 |---|---|
 | Popup sagt „Nicht bereit" | Einrichtung noch einmal starten. Ordner verschoben? |
 | Kein Button unter dem Video | Seite neu laden (⌘R / Strg+R) |
-| „Sign in to confirm your age" | Einstellungen → *Cookies aus Browser* → Chrome. Chrome muss dabei geschlossen sein |
 | „yt-dlp ist zu alt" | Einstellungen → *yt-dlp aktualisieren* |
 | Download bricht ständig ab | Einstellungen → *Gleichzeitige Teile* auf 1 |
+| Altersbeschränktes Video | Wird nicht unterstützt |
 
 Hilft gar nichts, steht die Antwort meist im Log:
 
 ```
-macOS     ~/Library/Logs/YouTubeDownloader/host.log
-Windows   %LOCALAPPDATA%\YouTubeDownloader\Logs\host.log
+macOS     ~/Library/Logs/Mitschnitt/host.log
+Windows   %LOCALAPPDATA%\Mitschnitt\Logs\host.log
 ```
 
 <br>
@@ -156,8 +168,8 @@ kleinen Vermittler, den Chrome bei Bedarf selbst startet:
 └─────────────┘                      └──────────────┘              └────────┘
 ```
 
-Genau diesen Vermittler meldet die Einrichtung bei Chrome an. Er nimmt nur
-YouTube-Adressen entgegen und schreibt nur innerhalb deines Benutzerordners.
+Genau diesen Vermittler meldet die Einrichtung bei Chrome an. Er schreibt nur
+innerhalb deines Benutzerordners und schickt nichts nach außen.
 
 <details>
 <summary><b>Für Entwickler: Aufbau, Tests, Fallstricke</b></summary>
@@ -200,9 +212,9 @@ Datei Bild und Ton enthält — und dass die angekündigte Größe stimmt.
 - Unter Windows schreibt stdout `\n` als `\r\n` und zerstört damit den
   Längenkopf des Protokolls — `msvcrt.setmode(..., O_BINARY)` ist Pflicht.
 - Der Button liest Höhe, Rundung, Farbe und Schrift zur Laufzeit von einem
-  echten YouTube-Button ab. Abgeschriebene Zahlen veralten mit dem nächsten
-  Umbau. Seine Breite ist eingefroren, sonst springt die ganze Leiste, sobald
-  aus „Herunterladen" ein Prozentwert wird.
+  echten Nachbarbutton ab. Abgeschriebene Zahlen veralten mit dem nächsten
+  Umbau der Seite. Seine Breite ist eingefroren, sonst springt die ganze
+  Leiste, sobald aus „Herunterladen" ein Prozentwert wird.
 
 </details>
 
@@ -213,7 +225,3 @@ Datei Bild und Ton enthält — und dass die angekündigte Größe stimmt.
 [MIT](LICENSE) für diesen Code. yt-dlp (Unlicense) und FFmpeg (LGPL/GPL)
 werden **nicht mitgeliefert**, sondern bei der Einrichtung von den
 Projektseiten geholt und als eigenständige Programme aufgerufen.
-
-Gedacht für eigene Videos, freie Inhalte und Material, für das du die Rechte
-hast. YouTubes Nutzungsbedingungen untersagen das Herunterladen ohne
-Erlaubnis — was du damit machst, liegt bei dir.

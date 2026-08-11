@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="utf-8">
-  <title>YouTube Downloader — Einstellungen</title>
+  <title>Mitschnitt — Einstellungen</title>
   <link rel="stylesheet" href="../lib/ui.css">
   <link rel="stylesheet" href="options.css">
 </head>
@@ -12,7 +12,7 @@
   <header class="masthead">
     <span class="bars brandbars" aria-hidden="true"><span class="strip"></span></span>
     <div>
-      <h1>YouTube Downloader</h1>
+      <h1>Mitschnitt</h1>
       <p class="sub mono">yt-dlp und ffmpeg, lokal auf diesem Rechner</p>
     </div>
   </header>
@@ -95,20 +95,6 @@
     </label>
 
     <label class="field">
-      <span class="label">Cookies aus Browser</span>
-      <select id="cookiesFromBrowser">
-        <option value="">keine</option>
-        <option value="chrome">Chrome</option>
-        <option value="brave">Brave</option>
-        <option value="edge">Edge</option>
-        <option value="firefox">Firefox</option>
-        <option value="safari">Safari</option>
-      </select>
-      <span class="help">Nötig für altersbeschränkte und private Videos. Chrome muss
-        dafür geschlossen sein.</span>
-    </label>
-
-    <label class="field">
       <span class="label">Untertitelsprachen</span>
       <input type="text" id="subLangs" placeholder="de,en" spellcheck="false">
     </label>
@@ -127,6 +113,16 @@
     <ul class="partials" id="partials"></ul>
     <p class="note mono" id="partials-note">wird geladen …</p>
     <button class="btn ghost small" id="discard-partials" type="button">Alle verwerfen</button>
+  </section>
+
+  <section class="card notice">
+    <p class="legend">Wofür das gedacht ist</p>
+    <p class="help">Für eigene Videos, frei lizenzierte Inhalte und Material,
+      für das du die Rechte oder eine Erlaubnis hast. Die Nutzungsbedingungen
+      von Videoplattformen untersagen das Herunterladen in der Regel, und das
+      Umgehen technischer Schutzmaßnahmen ist urheberrechtlich nicht durch die
+      Privatkopie gedeckt (OLG Hamburg, 21.11.2024, 5 U 54/23). Was du mit dem
+      Werkzeug machst, liegt in deiner Verantwortung.</p>
   </section>
 
   <footer class="foot">

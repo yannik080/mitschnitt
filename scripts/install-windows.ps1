@@ -1,4 +1,4 @@
-# Richtet den YouTube Downloader unter Windows ein.
+# Richtet Mitschnitt unter Windows ein.
 #
 # Fehlt yt-dlp, ffmpeg oder Python, wird das Fehlende neben den Host gelegt.
 # Es wird nichts systemweit installiert und keine Administratorrechte
@@ -30,7 +30,7 @@ function Stop-Here($message) {
 }
 
 Write-Host ''
-Write-Host 'YouTube Downloader - Einrichtung fuer Windows' -ForegroundColor White
+Write-Host 'Mitschnitt - Einrichtung fuer Windows' -ForegroundColor White
 Write-Host ''
 
 if (-not (Test-Path $HostPy)) {

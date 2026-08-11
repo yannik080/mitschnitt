@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-Native Messaging Host für die YouTube-Downloader-Extension.
+Native Messaging Host für die Mitschnitt-Erweiterung.
 
 Spricht Chromes Native-Messaging-Protokoll über stdin/stdout
 (4 Byte Länge little-endian + UTF-8-JSON) und führt lokal yt-dlp
 und ffmpeg aus.
 
 stdout ist ausschließlich dem Protokoll vorbehalten — jede Diagnose
-geht ins Logfile unter ~/Library/Logs/YouTubeDownloader/host.log.
+geht ins Logfile unter ~/Library/Logs/Mitschnitt/host.log.
 """
 
 import json
@@ -46,10 +46,10 @@ SEP = "\x1f"
 def _log_dir():
     if IS_WINDOWS:
         base = os.environ.get("LOCALAPPDATA") or str(Path.home())
-        return Path(base) / "YouTubeDownloader" / "Logs"
+        return Path(base) / "Mitschnitt" / "Logs"
     if IS_MAC:
-        return Path.home() / "Library" / "Logs" / "YouTubeDownloader"
-    return Path.home() / ".local" / "state" / "youtube-downloader"
+        return Path.home() / "Library" / "Logs" / "Mitschnitt"
+    return Path.home() / ".local" / "state" / "mitschnitt"
 
 
 LOG_DIR = _log_dir()
@@ -121,7 +121,7 @@ BUNDLED_DIR = HOST_DIR / "bin"
 if IS_WINDOWS:
     SEARCH_PATHS = [
         str(BUNDLED_DIR),
-        str(Path(os.environ.get("LOCALAPPDATA", Path.home())) / "YouTubeDownloader" / "bin"),
+        str(Path(os.environ.get("LOCALAPPDATA", Path.home())) / "Mitschnitt" / "bin"),
         str(Path(os.environ.get("LOCALAPPDATA", Path.home())) / "Microsoft" / "WinGet" / "Links"),
         str(Path(os.environ.get("ProgramFiles", "C:\\Program Files")) / "ffmpeg" / "bin"),
         "C:\\ffmpeg\\bin",
@@ -190,8 +190,6 @@ URL_ALLOWED = re.compile(
 HEIGHTS = {0, 144, 240, 360, 480, 720, 1080, 1440, 2160, 4320}
 AUDIO_FORMATS = {"mp3", "m4a", "opus", "flac", "wav", "vorbis", "aac", "best"}
 CONTAINERS = {"mp4", "mkv", "webm"}
-BROWSERS = {"", "chrome", "brave", "chromium", "edge", "firefox", "safari",
-            "opera", "vivaldi"}
 SUBLANGS_RE = re.compile(r"^[A-Za-z0-9,\-\.\*]{1,120}$")
 RATE_RE = re.compile(r"^\d+(\.\d+)?[KMG]?$")
 
@@ -378,10 +376,6 @@ def build_command(url, opts, out_dir):
     if rate and RATE_RE.match(rate):
         cmd += ["--limit-rate", rate]
 
-    browser = str(opts.get("cookiesFromBrowser") or "")
-    if browser and browser in BROWSERS:
-        cmd += ["--cookies-from-browser", browser]
-
     if opts.get("mode") == "audio":
         audio_format = opts.get("audioFormat", "mp3")
         if audio_format not in AUDIO_FORMATS:
@@ -423,9 +417,11 @@ def build_command(url, opts, out_dir):
 # ------------------------------------------------------------ Fehlertexte ---
 
 ERROR_HINTS = [
-    (r"Sign in to confirm (your age|you'?re not a bot)",
-     "YouTube verlangt eine Anmeldung. Aktiviere in den Einstellungen "
-     "„Cookies aus Chrome verwenden“."),
+    (r"Sign in to confirm your age",
+     "Das Video ist altersbeschränkt und lässt sich ohne Anmeldung nicht "
+     "laden."),
+    (r"Sign in to confirm you'?re not a bot",
+     "YouTube verlangt gerade eine Anmeldung. Versuche es später erneut."),
     (r"This video is private",
      "Das Video ist privat."),
     (r"Video unavailable",
@@ -445,9 +441,6 @@ ERROR_HINTS = [
      "Kein Schreibrecht im Zielordner."),
     (r"No space left on device",
      "Auf dem Laufwerk ist kein Platz mehr."),
-    (r"could not (find|open) .*cookies|Could not copy Chrome cookie database",
-     "Chrome-Cookies konnten nicht gelesen werden. Schließe Chrome oder "
-     "deaktiviere die Cookie-Option."),
 ]
 
 

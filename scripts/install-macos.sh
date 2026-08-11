@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Richtet den YouTube Downloader unter macOS ein.
+# Richtet Mitschnitt unter macOS ein.
 #
 # Fehlt yt-dlp oder ffmpeg, werden eigenständige Fassungen neben den Host
 # gelegt — Homebrew ist nicht nötig. Vorhandene Installationen werden
@@ -24,7 +24,7 @@ fail()  { printf '  \033[31m✗\033[0m %s\n' "$1"; }
 trap 'echo; fail "Abgebrochen. Melde dich mit dieser Ausgabe, dann sehen wir weiter."; echo; read -r -p "Enter zum Schließen "' ERR
 
 echo
-bold "YouTube Downloader — Einrichtung für macOS"
+bold "Mitschnitt — Einrichtung für macOS"
 echo
 
 # ------------------------------------------------------------- 1. Werkzeuge ---
