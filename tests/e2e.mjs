@@ -39,6 +39,21 @@ function check(name, passed, detail = '') {
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
+ * Wartet auf eine Bedingung statt auf eine Uhrzeit. Feste Wartezeiten
+ * erzeugen Tests, die mal durchgehen und mal nicht — und dann sucht man
+ * den Fehler im Produkt statt im Test.
+ */
+async function waitUntil(check, { timeout = 20000, interval = 200 } = {}) {
+  const deadline = Date.now() + timeout;
+  for (;;) {
+    const value = await check();
+    if (value) return value;
+    if (Date.now() > deadline) return null;
+    await sleep(interval);
+  }
+}
+
+/**
  * Fotografiert ein Element (auch im Shadow Root). Ein Clip-Rechteck ist hier
  * unbrauchbar: Puppeteer scrollt dafür die Seite, das verankerte Panel klappt
  * daraufhin zu — der Test würde sein eigenes Prüfobjekt schließen.
@@ -201,8 +216,12 @@ async function main() {
         && document.getElementById('ytdl-panel-host').style.display !== 'none'));
     check('Panel öffnet sich', panelOpen);
 
-    // Auf die Formatabfrage warten
-    await sleep(6000);
+    // Auf das Ergebnis der Formatabfrage warten
+    await waitUntil(() => page.evaluate(() => {
+      const root = document.getElementById('ytdl-panel-host')?.shadowRoot;
+      const spec = root?.querySelector('.spec')?.textContent || '';
+      return /\d+p/.test(spec);
+    }), { timeout: 45000 });
     const panelInfo = await page.evaluate(() => {
       const root = document.getElementById('ytdl-panel-host').shadowRoot;
       const chips = [...root.querySelectorAll('.chip')];
@@ -243,8 +262,8 @@ async function main() {
     let sawProgress = false;
     let stayedOpen = true;
     let finished = null;
-    for (let i = 0; i < 120; i += 1) {
-      await sleep(500);
+    for (let i = 0; i < 300; i += 1) {
+      await sleep(200);
       const snapshot = await page.evaluate(() => {
         const host = document.getElementById('ytdl-panel-host');
         const root = host.shadowRoot;
@@ -259,7 +278,14 @@ async function main() {
         };
       });
       if (!snapshot.open) stayedOpen = false;
-      if (snapshot.pill && /%|Lädt|Video/.test(snapshot.pill)) sawProgress = true;
+      // Beleg für laufenden Fortschritt: die Pille zeigt etwas anderes als
+      // im Ruhezustand, oder der Balken ist gefüllt. Bei einem 466-KB-Video
+      // ist der Prozentwert oft schon vorbei, bevor man ihn ablesen kann.
+      const filled = parseFloat(snapshot.fill) > 0;
+      if (filled) sawProgress = true;
+      if (snapshot.pill && !/^Herunterladen$|^Fortsetzen$/.test(snapshot.pill)) {
+        sawProgress = true;
+      }
       if (snapshot.action && snapshot.action.includes('Noch einmal')) {
         finished = snapshot; break;
       }
@@ -314,7 +340,8 @@ async function main() {
     await popup.setViewport({ width: 400, height: 700 });
     await popup.goto(`chrome-extension://${extId}/popup/popup.html`,
       { waitUntil: 'domcontentloaded' });
-    await sleep(4000);
+    await waitUntil(() => popup.evaluate(() =>
+      document.getElementById('status-text')?.textContent.trim() !== 'Wird geprüft …'));
     const popupInfo = await popup.evaluate(() => ({
       status: document.getElementById('status-text')?.textContent.trim(),
       detail: document.getElementById('status-detail')?.textContent.trim(),
@@ -330,7 +357,8 @@ async function main() {
     const options = control;
     await options.setViewport({ width: 760, height: 1200 });
     await options.reload({ waitUntil: 'domcontentloaded' });
-    await sleep(4000);
+    await waitUntil(() => options.evaluate(() =>
+      (document.getElementById('tool-list')?.textContent || '').includes('yt-dlp')));
     const optionsInfo = await options.evaluate(() => ({
       tools: document.getElementById('tool-list')?.textContent.replace(/\s+/g, ' ').trim(),
       note: document.getElementById('tool-note')?.textContent.trim(),
