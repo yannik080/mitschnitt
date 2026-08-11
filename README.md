@@ -134,6 +134,48 @@ mit **Fortsetzen** und **Verwerfen**.
 
 <br>
 
+## Auch auf dem iPhone
+
+<img src="docs/iphone.png" width="270" align="right" alt="Die Oberfläche auf dem iPhone">
+
+Auf iOS lässt sich yt-dlp nicht ausführen — kein Prozessstart, kein FFmpeg.
+Wer trotzdem in voller Auflösung laden will, braucht einen Rechner, der die
+Arbeit macht. Genau das ist hier schon eingerichtet.
+
+Doppelklick auf **`Für iPhone einrichten (macOS).command`**. Der Mac öffnet
+dann einen kleinen Dienst **nur im eigenen WLAN**, abgesichert mit einem
+Schlüssel. Danach gibt es zwei Wege:
+
+**Safari.** Die angezeigte Adresse auf dem iPhone öffnen — dieselbe Auswahl,
+dieselben exakten Größen, derselbe Fortschrittsbalken. Über „Zum
+Home-Bildschirm" liegt es wie eine App auf dem Gerät. Nichts einzurichten.
+
+**Kurzbefehl im Teilen-Menü.** Damit lädst du direkt aus der YouTube-App
+heraus. Vier Aktionen, die Einrichtung zeigt sie mit deiner Adresse und
+deinem Schlüssel fertig zum Abtippen:
+
+1. Neuer Kurzbefehl, **Im Teilen-Menü anzeigen** an, Typ **URLs**
+2. Aktion **Text**: `http://<deine-adresse>:8787/api/grab?t=<schlüssel>&height=1080&url=`
+   und die Variable **Kurzbefehlseingabe** anhängen
+3. Aktion **Inhalte von URL abrufen**
+4. Aktion **In Fotos sichern** (oder **Datei sichern**)
+
+Teilen in der YouTube-App → dein Kurzbefehl → das Video landet in Fotos.
+
+<br clear="right">
+
+Ein einziger Aufruf erledigt alles: der Mac lädt, führt Bild und Ton
+zusammen und schickt die fertige Datei zurück. Für `height=` geht jede
+vorhandene Stufe, `mode=audio` liefert stattdessen eine MP3.
+
+> Der Dienst ist aus dem Internet **nicht** erreichbar, nur aus deinem WLAN,
+> und ohne den Schlüssel antwortet er auf nichts. Abschalten jederzeit mit
+> `scripts/iphone-uninstall-macos.sh` — danach ist der Port wieder zu.
+>
+> Unter Windows gibt es diesen Teil noch nicht.
+
+<br>
+
 ## Wenn etwas nicht geht
 
 Klick auf das Symbol in der Symbolleiste — dort steht, was fehlt.
@@ -150,6 +192,7 @@ Hilft gar nichts, steht die Antwort meist im Log:
 
 ```
 macOS     ~/Library/Logs/Mitschnitt/host.log
+          ~/Library/Logs/Mitschnitt/server.log   (Dienst fürs iPhone)
 Windows   %LOCALAPPDATA%\Mitschnitt\Logs\host.log
 ```
 
@@ -184,6 +227,7 @@ extension/
   popup/ options/      Status, Verlauf, Einstellungen
 native-host/
   ytdl_host.py         spricht Native Messaging, ruft yt-dlp auf
+  mitschnitt_server.py Begleitdienst fürs iPhone, nutzt denselben Code
 scripts/               Einrichtung je System, Release-Bau
 tests/                 Protokoll-, Fortsetz- und Browsertests
 ```

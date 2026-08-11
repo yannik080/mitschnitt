@@ -593,17 +593,23 @@ POSTPROCESSOR_LABELS = {
 }
 
 
-def run_download(job_id, url, opts):
+def run_download(job_id, url, opts, emit=None):
+    # Wohin die Meldungen gehen, entscheidet der Aufrufer: der
+    # Native-Messaging-Host schreibt sie nach stdout, der Dienst für
+    # das iPhone sammelt sie im Speicher. Der Download-Weg bleibt
+    # derselbe — es gibt keine zweite Wahrheit.
+    emit = emit or send
+
     started = time.time()
     try:
         url = validate_url(url)
         out_dir = resolve_output_dir(opts.get("outputDir"))
     except Exception as exc:
-        send({"type": "error", "id": job_id, "message": str(exc)})
+        emit({"type": "error", "id": job_id, "message": str(exc)})
         return
 
     if not YTDLP:
-        send({"type": "error", "id": job_id,
+        emit({"type": "error", "id": job_id,
               "message": "yt-dlp wurde nicht gefunden. "
                          "Installiere es mit: brew install yt-dlp"})
         return
@@ -625,7 +631,7 @@ def run_download(job_id, url, opts):
             **_spawn_flags(),
         )
     except Exception as exc:
-        send({"type": "error", "id": job_id,
+        emit({"type": "error", "id": job_id,
               "message": "yt-dlp konnte nicht gestartet werden: %s" % exc})
         return
 
@@ -647,7 +653,7 @@ def run_download(job_id, url, opts):
     last_emit = 0.0
     last_percent = -1.0
 
-    send({"type": "started", "id": job_id, "outputDir": str(out_dir)})
+    emit({"type": "started", "id": job_id, "outputDir": str(out_dir)})
 
     try:
         for raw in process.stdout:
@@ -665,11 +671,11 @@ def run_download(job_id, url, opts):
                     last_emit = now
                     if percent is not None:
                         last_percent = percent
-                    send({"type": "progress", "id": job_id, **info})
+                    emit({"type": "progress", "id": job_id, **info})
 
             elif line.startswith("@@PP@@"):
                 name = line[6:].strip()
-                send({"type": "stage", "id": job_id,
+                emit({"type": "stage", "id": job_id,
                       "stage": POSTPROCESSOR_LABELS.get(name, name or "Verarbeiten"),
                       "raw": name})
 
@@ -678,13 +684,13 @@ def run_download(job_id, url, opts):
                     title = json.loads(line[8:])
                 except Exception:
                     title = line[8:].strip('"')
-                send({"type": "meta", "id": job_id, "title": title})
+                emit({"type": "meta", "id": job_id, "title": title})
 
             elif line.startswith("@@FILE@@"):
                 final_path = line[8:].strip()
 
             elif "Merging formats into" in line:
-                send({"type": "stage", "id": job_id,
+                emit({"type": "stage", "id": job_id,
                       "stage": "Video und Ton zusammenführen", "raw": "Merger"})
             else:
                 log("JOB", job_id, "stdout:", line)
@@ -708,7 +714,7 @@ def run_download(job_id, url, opts):
 
     if returncode == 0 and final_path and os.path.exists(final_path):
         size = os.path.getsize(final_path)
-        send({"type": "done", "id": job_id,
+        emit({"type": "done", "id": job_id,
               "path": final_path,
               "filename": os.path.basename(final_path),
               "title": title,
@@ -716,11 +722,11 @@ def run_download(job_id, url, opts):
               "seconds": round(time.time() - started, 1)})
         log("JOB", job_id, "fertig:", final_path, size, "Bytes")
     elif cancelled_by_user or returncode in (-signal.SIGTERM, -signal.SIGKILL, 130, 143):
-        send({"type": "cancelled", "id": job_id,
+        emit({"type": "cancelled", "id": job_id,
               "partialBytes": partial_bytes(out_dir)})
         log("JOB", job_id, "abgebrochen")
     elif returncode == 0 and not final_path:
-        send({"type": "error", "id": job_id,
+        emit({"type": "error", "id": job_id,
               "message": "Download beendet, aber keine Datei gefunden. "
                          "Details im Log."})
         log("JOB", job_id, "kein Dateipfad; stderr:", stderr_text[-500:])
@@ -730,7 +736,7 @@ def run_download(job_id, url, opts):
         if resumable:
             message = ("Verbindung unterbrochen. Der Fortschritt ist gesichert — "
                        "beim nächsten Versuch geht es an derselben Stelle weiter.")
-        send({"type": "error", "id": job_id,
+        emit({"type": "error", "id": job_id,
               "message": message,
               "resumable": resumable,
               "partialBytes": partial_bytes(out_dir),
@@ -802,14 +808,20 @@ def exact_sizes(info, heights, audio_wanted=True):
 
 
 
-def run_probe(job_id, url, output_dir=None):
+def run_probe(job_id, url, output_dir=None, emit=None):
+    # Wohin die Meldungen gehen, entscheidet der Aufrufer: der
+    # Native-Messaging-Host schreibt sie nach stdout, der Dienst für
+    # das iPhone sammelt sie im Speicher. Der Download-Weg bleibt
+    # derselbe — es gibt keine zweite Wahrheit.
+    emit = emit or send
+
     try:
         url = validate_url(url)
     except Exception as exc:
-        send({"type": "error", "id": job_id, "message": str(exc)})
+        emit({"type": "error", "id": job_id, "message": str(exc)})
         return
     if not YTDLP:
-        send({"type": "error", "id": job_id, "message": "yt-dlp fehlt."})
+        emit({"type": "error", "id": job_id, "message": "yt-dlp fehlt."})
         return
 
     cmd = [YTDLP, "--dump-single-json", "--no-playlist", "--no-warnings",
@@ -819,18 +831,18 @@ def run_probe(job_id, url, output_dir=None):
                                 timeout=45, text=True, encoding="utf-8",
                                 errors="replace", **_quiet_flags())
     except subprocess.TimeoutExpired:
-        send({"type": "error", "id": job_id,
+        emit({"type": "error", "id": job_id,
               "message": "Zeitüberschreitung beim Abfragen der Formate."})
         return
     if result.returncode != 0:
-        send({"type": "error", "id": job_id,
+        emit({"type": "error", "id": job_id,
               "message": humanize_error(result.stderr or "", result.returncode)})
         return
 
     try:
         info = json.loads(result.stdout)
     except Exception:
-        send({"type": "error", "id": job_id,
+        emit({"type": "error", "id": job_id,
               "message": "Antwort von yt-dlp nicht lesbar."})
         return
 
@@ -861,7 +873,7 @@ def run_probe(job_id, url, output_dir=None):
     except Exception:
         already = None
 
-    send({
+    emit({
         "type": "probe",
         "id": job_id,
         "partialBytes": already,

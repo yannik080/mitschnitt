@@ -22,6 +22,7 @@ stage() {   # stage <system>
   cp -R "$ROOT/extension" "$dir/"
   mkdir -p "$dir/native-host" "$dir/keys" "$dir/tests" "$dir/scripts"
   cp "$ROOT/native-host/ytdl_host.py" "$dir/native-host/"
+  cp "$ROOT/native-host/mitschnitt_server.py" "$dir/native-host/"
   # Nur der öffentliche Teil: der private Schlüssel bleibt hier.
   cp "$ROOT/keys/extension_id.txt" "$ROOT/keys/manifest_key.txt" "$dir/keys/"
   cp "$ROOT/tests/harness.py" "$dir/tests/"
@@ -29,9 +30,13 @@ stage() {   # stage <system>
   cp "$ROOT/LICENSE" "$dir/" 2>/dev/null || true
 
   if [ "$system" = "macos" ]; then
-    cp "$ROOT/scripts/install-macos.sh" "$ROOT/scripts/uninstall-macos.sh" "$dir/scripts/"
+    cp "$ROOT/scripts/install-macos.sh" "$ROOT/scripts/uninstall-macos.sh" \
+       "$ROOT/scripts/iphone-macos.sh" "$ROOT/scripts/iphone-uninstall-macos.sh" \
+       "$dir/scripts/"
     cp "$ROOT/Installieren (macOS).command" "$dir/"
-    chmod +x "$dir/Installieren (macOS).command" "$dir/scripts/"*.sh
+    cp "$ROOT/Für iPhone einrichten (macOS).command" "$dir/"
+    chmod +x "$dir/Installieren (macOS).command" \
+             "$dir/Für iPhone einrichten (macOS).command" "$dir/scripts/"*.sh
   else
     cp "$ROOT/scripts/install-windows.ps1" "$ROOT/scripts/uninstall-windows.ps1" "$dir/scripts/"
     cp "$ROOT/Installieren (Windows).bat" "$dir/"
@@ -87,6 +92,22 @@ Schritt 3 — Fertig
 
   Videoseite neu laden. Unter dem Video steht jetzt dein eigener
   Download-Button.
+
+
+AUCH AUF DEM IPHONE
+-------------------
+
+  Auf iOS lässt sich yt-dlp nicht ausführen. Der Mac erledigt die
+  Arbeit deshalb weiter, und das iPhone holt sich das Ergebnis über
+  euer WLAN ab.
+
+  Doppelklick auf:  Für iPhone einrichten (macOS).command
+
+  Danach zeigt das Fenster eine Adresse, die du in Safari auf dem
+  iPhone öffnest — und eine Anleitung für einen Kurzbefehl, mit dem
+  du direkt aus der YouTube-App heraus teilen kannst.
+
+  (Nur macOS. Unter Windows gibt es diesen Teil noch nicht.)
 
 
 WICHTIG
