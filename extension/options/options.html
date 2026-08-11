@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>YouTube Downloader — Einstellungen</title>
+  <link rel="stylesheet" href="../lib/ui.css">
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+<main class="page">
+
+  <header class="masthead">
+    <span class="bars brandbars" aria-hidden="true"><span class="strip"></span></span>
+    <div>
+      <h1>YouTube Downloader</h1>
+      <p class="sub mono">yt-dlp und ffmpeg, lokal auf diesem Rechner</p>
+    </div>
+  </header>
+
+  <section class="card" id="tools">
+    <p class="legend">Werkzeuge</p>
+    <dl class="kv" id="tool-list">
+      <dt>Native Host</dt><dd class="mono" id="t-host">wird geprüft …</dd>
+    </dl>
+    <div class="row">
+      <button class="btn ghost small" id="recheck" type="button">Erneut prüfen</button>
+      <button class="btn ghost small" id="update-ytdlp" type="button">yt-dlp aktualisieren</button>
+    </div>
+    <p class="note mono" id="tool-note"></p>
+  </section>
+
+  <section class="card">
+    <p class="legend">Ablage</p>
+
+    <label class="field">
+      <span class="label">Zielordner</span>
+      <input type="text" id="outputDir" placeholder="Downloads/YouTube" spellcheck="false">
+      <span class="help">Relativ zu deinem Benutzerordner. Leer lassen für
+        <span class="mono">~/Downloads/YouTube</span>.</span>
+    </label>
+
+    <label class="field">
+      <span class="label">Dateiname</span>
+      <input type="text" id="filenameTemplate" spellcheck="false">
+      <span class="help">yt-dlp-Vorlage. Nützlich:
+        <span class="mono">%(title)s</span>, <span class="mono">%(id)s</span>,
+        <span class="mono">%(uploader)s</span>, <span class="mono">%(upload_date)s</span>,
+        <span class="mono">%(resolution)s</span>.</span>
+    </label>
+  </section>
+
+  <section class="card">
+    <p class="legend">Voreinstellung für neue Downloads</p>
+
+    <div class="field">
+      <span class="label">Auflösung</span>
+      <div class="chips" id="height-chips" role="radiogroup" aria-label="Auflösung"></div>
+    </div>
+
+    <div class="field">
+      <span class="label">Audioformat</span>
+      <div class="chips" id="audio-chips" role="radiogroup" aria-label="Audioformat"></div>
+    </div>
+
+    <div class="field">
+      <span class="label">Container</span>
+      <div class="chips" id="container-chips" role="radiogroup" aria-label="Container"></div>
+    </div>
+
+    <div class="field">
+      <span class="label">Extras</span>
+      <div class="chips" id="extra-toggles"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <p class="legend">Verbindung</p>
+
+    <label class="field">
+      <span class="label">Gleichzeitige Teile</span>
+      <select id="concurrentFragments">
+        <option value="1">1 — schonend</option>
+        <option value="4">4 — ausgewogen</option>
+        <option value="8">8 — schnell</option>
+        <option value="16">16 — sehr schnell</option>
+      </select>
+      <span class="help">Mehr Teile laden schneller, belasten die Leitung aber stärker.</span>
+    </label>
+
+    <label class="field">
+      <span class="label">Tempolimit</span>
+      <input type="text" id="rateLimit" placeholder="z. B. 5M" spellcheck="false">
+      <span class="help">Leer = ohne Begrenzung. Format:
+        <span class="mono">500K</span>, <span class="mono">5M</span>.</span>
+    </label>
+
+    <label class="field">
+      <span class="label">Cookies aus Browser</span>
+      <select id="cookiesFromBrowser">
+        <option value="">keine</option>
+        <option value="chrome">Chrome</option>
+        <option value="brave">Brave</option>
+        <option value="edge">Edge</option>
+        <option value="firefox">Firefox</option>
+        <option value="safari">Safari</option>
+      </select>
+      <span class="help">Nötig für altersbeschränkte und private Videos. Chrome muss
+        dafür geschlossen sein.</span>
+    </label>
+
+    <label class="field">
+      <span class="label">Untertitelsprachen</span>
+      <input type="text" id="subLangs" placeholder="de,en" spellcheck="false">
+    </label>
+  </section>
+
+  <section class="card">
+    <p class="legend">Verhalten</p>
+    <div class="chips" id="behaviour-toggles"></div>
+    <p class="help">Unterbrochene Downloads laufen an der abgerissenen Stelle weiter,
+      nicht von vorn. Von Hand abgebrochene bleiben liegen, bis du sie selbst
+      fortsetzt.</p>
+  </section>
+
+  <section class="card">
+    <p class="legend">Angefangene Downloads</p>
+    <ul class="partials" id="partials"></ul>
+    <p class="note mono" id="partials-note">wird geladen …</p>
+    <button class="btn ghost small" id="discard-partials" type="button">Alle verwerfen</button>
+  </section>
+
+  <footer class="foot">
+    <span class="mono" id="saved-note"></span>
+    <span class="mono faint" id="ext-id"></span>
+  </footer>
+
+</main>
+<script src="options.js" type="module"></script>
+</body>
+</html>

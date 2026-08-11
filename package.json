@@ -1,0 +1,15 @@
+{
+  "name": "youtube-downloader-extension",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Chrome-Extension mit lokalem yt-dlp/ffmpeg-Downloader",
+  "scripts": {
+    "test:host": "python3 tests/harness.py ping",
+    "test:resume": "python3 tests/test_resume.py",
+    "test:e2e": "node tests/e2e.mjs",
+    "icons": "python3 tools/icon_variants.py basislinie"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^24.0.0"
+  }
+}

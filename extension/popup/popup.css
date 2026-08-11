@@ -1,0 +1,80 @@
+body { width: 344px; }
+
+.top {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 13px 14px; border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.brand h1 { font-size: 13.5px; white-space: nowrap; }
+
+/* Der SMPTE-Balken als Wortmarke — dasselbe Motiv wie im Fortschritt. */
+.brandbars { width: 20px; height: 20px; border-radius: 5px; flex: none; }
+.brandbars .strip {
+  position: absolute; inset: 0; width: 100%;
+  background: linear-gradient(90deg,
+    #BFBFBF 0 14.28%, #BFBF00 14.28% 28.56%, #00BFBF 28.56% 42.84%,
+    #00BF00 42.84% 57.12%, #BF00BF 57.12% 71.4%, #BF0000 71.4% 85.68%,
+    #0000BF 85.68% 100%);
+}
+
+.status-card { padding: 13px 14px; border-bottom: 1px solid var(--line); }
+.status-row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.dot {
+  width: 7px; height: 7px; border-radius: 50%; flex: none;
+  background: var(--faint);
+}
+.dot[data-state="ok"] { background: var(--ok); }
+.dot[data-state="error"] { background: var(--danger); }
+.detail {
+  margin: 6px 0 0; font-size: 10.5px; color: var(--faint);
+  line-height: 1.45; word-break: break-word;
+}
+.detail:empty { display: none; }
+.status-actions { margin-top: 10px; }
+
+.block { padding: 13px 14px; border-bottom: 1px solid var(--line); }
+.block-head { display: flex; align-items: baseline; justify-content: space-between; }
+
+.url-row { display: grid; grid-template-columns: 1fr auto; gap: 7px; }
+
+.list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.list:empty { display: none; }
+
+.item {
+  display: grid; grid-template-columns: 1fr auto; gap: 4px 10px;
+  align-items: baseline;
+}
+.item .name {
+  font-size: 12px; line-height: 1.35; overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap;
+}
+.item .meta {
+  font-family: var(--mono); font-size: 10px; color: var(--faint);
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+  justify-self: end;
+}
+/* Jeder Text in der Aktionszeile bleibt klein — auch wenn er kein Knopf ist. */
+.item .row, .item .row * { font-family: var(--mono); font-size: 10px; }
+.item .bars { grid-column: 1 / -1; margin-top: 2px; }
+.item .row { grid-column: 1 / -1; display: flex; gap: 8px; margin-top: 3px; }
+.item .row button {
+  border: 0; background: none; padding: 0; color: var(--muted);
+  font-family: var(--mono); font-size: 10px; text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.item .row button:hover { color: var(--fg); }
+
+.linkbtn {
+  border: 0; background: none; padding: 0; color: var(--muted);
+  font-family: var(--mono); font-size: 10px; text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.linkbtn:hover { color: var(--fg); }
+
+.empty { font-size: 10.5px; color: var(--faint); margin: 0; }
+
+.foot {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 14px;
+}
+.version { font-size: 9.5px; color: var(--faint); }

@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Downloader",
+  "short_name": "YT Downloader",
+  "version": "1.0.0",
+  "description": "Ersetzt YouTubes Download-Button durch einen lokalen Download mit yt-dlp und ffmpeg.",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmv4bGkO2WE6mx8UTHpmP8LUqFAha0aR4O3LJ1xDYYpEWVksnlwx+EcnjCA7GnbzHwS1ee7lQD4hT6g5PjIhc4JiN0UpTiw6tTixLlAvhnzjwkQD/aYQpx2tciZWiCcszrAIzMV8d++cPs37GzfqhRr1D5/PmLvD+IL/54flhoyagHjc13FImNkVDTj9Fo3HTwIN8T9wYgsJJU3K4eJPjx4LZv8BhGqnfchNo3/wWe/4HwS6twJsAUwx33PRkYU7bXFOafvhxjBQP4UNjmw0zCut54WWUFnVNRiakHOaCnRKPFFS5ONc2YR3IBFsvmSui9ll2veCX5V/dLsS/f5b0UQIDAQAB",
+  "minimum_chrome_version": "116",
+  "permissions": [
+    "nativeMessaging",
+    "storage",
+    "notifications",
+    "alarms"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.youtube.com/*",
+        "https://m.youtube.com/*",
+        "https://music.youtube.com/*"
+      ],
+      "js": [
+        "content/inject.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "YouTube Downloader",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png"
+    }
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

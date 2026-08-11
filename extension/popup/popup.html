@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>YouTube Downloader</title>
+  <link rel="stylesheet" href="../lib/ui.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="bars brandbars" aria-hidden="true">
+        <span class="strip"></span>
+      </span>
+      <h1>YouTube Downloader</h1>
+    </div>
+    <button class="btn ghost small" id="open-options" type="button">Einstellungen</button>
+  </header>
+
+  <section class="status-card" id="status-card">
+    <p class="legend">Status</p>
+    <div class="status-row" id="status-row">
+      <span class="dot" id="status-dot"></span>
+      <span class="mono" id="status-text">Wird geprüft …</span>
+    </div>
+    <p class="mono detail" id="status-detail"></p>
+    <div class="status-actions" id="status-actions" hidden>
+      <button class="btn small" id="retry" type="button">Erneut prüfen</button>
+    </div>
+  </section>
+
+  <section class="block" id="jobs-block" hidden>
+    <p class="legend">Läuft gerade</p>
+    <ul class="list" id="jobs"></ul>
+  </section>
+
+  <section class="block" id="interrupted-block" hidden>
+    <div class="block-head">
+      <p class="legend">Unterbrochen</p>
+      <button class="linkbtn" id="discard-all" type="button">Alle verwerfen</button>
+    </div>
+    <ul class="list" id="interrupted"></ul>
+    <p class="mono detail" id="interrupted-note"></p>
+  </section>
+
+  <section class="block">
+    <p class="legend">Von URL laden</p>
+    <div class="url-row">
+      <input type="text" id="url" placeholder="https://www.youtube.com/watch?v=…"
+             spellcheck="false" autocomplete="off">
+      <button class="btn" id="fetch" type="button">Laden</button>
+    </div>
+    <p class="mono detail" id="url-detail"></p>
+  </section>
+
+  <section class="block">
+    <div class="block-head">
+      <p class="legend">Zuletzt geladen</p>
+      <button class="linkbtn" id="clear-history" type="button" hidden>Leeren</button>
+    </div>
+    <ul class="list" id="history"></ul>
+    <p class="empty mono" id="history-empty">Noch nichts heruntergeladen.</p>
+  </section>
+
+  <footer class="foot">
+    <button class="linkbtn" id="open-dir" type="button">Zielordner öffnen</button>
+    <span class="mono version" id="version"></span>
+  </footer>
+
+  <script src="popup.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+# Abhängigkeiten und Baureste
+node_modules/
+package-lock.json
+dist/
+__pycache__/
+
+# Wird von der Einrichtung erzeugt, ist rechnerspezifisch
+native-host/run_host.sh
+native-host/run_host.bat
+native-host/bin/
+native-host/com.yannik.ytdl_host.json
+
+# NIEMALS veröffentlichen: daraus leitet sich die Extension-ID ab
+keys/extension_key.pem
+
+# Testartefakte
+tests/screenshots/
