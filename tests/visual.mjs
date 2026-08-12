@@ -16,6 +16,8 @@ const EXTENSION = path.join(ROOT, 'extension');
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const SHOTS = path.join(ROOT, 'tests', 'screenshots');
 const VIDEO = 'https://www.youtube.com/watch?v=aqz-KE-bpKQ';
+// Muss sich vom Auslieferungszustand unterscheiden.
+const TEST_DIR = 'Downloads/Mitschnitt-Visualtest';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -63,6 +65,16 @@ async function main() {
   try {
     await browser.installExtension(EXTENSION);
     await sleep(2500);
+
+    // Eigener Zielordner für den Test. Niemals der voreingestellte:
+    // dort liegen die echten Downloads des Nutzers.
+    const control = await browser.newPage();
+    await control.goto(`chrome-extension://${extId}/options/options.html`,
+      { waitUntil: 'domcontentloaded' });
+    await control.evaluate((dir) => chrome.runtime.sendMessage({
+      type: 'saveSettings', patch: { outputDir: dir, notify: false },
+    }), TEST_DIR);
+    await control.close();
 
     await browser.setCookie(
       { name: 'CONSENT', value: 'YES+cb', domain: '.youtube.com', path: '/' },
@@ -201,8 +213,7 @@ async function main() {
   } finally {
     await browser.close();
     fs.rmSync(profile, { recursive: true, force: true });
-    fs.rmSync(path.join(os.homedir(), 'Downloads', 'YouTube', '.incomplete'),
-      { recursive: true, force: true });
+    fs.rmSync(path.join(os.homedir(), TEST_DIR), { recursive: true, force: true });
   }
   console.log(`\nAufnahmen in ${SHOTS}`);
 }

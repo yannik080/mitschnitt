@@ -14,6 +14,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import puppeteer from 'puppeteer-core';
+import { removeTestDir } from './safe-cleanup.mjs';
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const EXTENSION = path.join(ROOT, 'extension');
@@ -69,7 +70,7 @@ const PANEL_EL = () => document.getElementById('ytdl-panel-host')
   .shadowRoot.querySelector('.panel');
 
 async function main() {
-  fs.rmSync(ABS_OUT, { recursive: true, force: true });
+  removeTestDir(ABS_OUT);
   fs.mkdirSync(SHOTS, { recursive: true });
 
   const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'ytdl-e2e-'));
