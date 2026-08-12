@@ -172,7 +172,18 @@ vorhandene Stufe, `mode=audio` liefert stattdessen eine MP3.
 > und ohne den Schlüssel antwortet er auf nichts. Abschalten jederzeit mit
 > `scripts/iphone-uninstall-macos.sh` — danach ist der Port wieder zu.
 >
+> Beide Geräte müssen im **selben normalen WLAN** sein. Über einen
+> iPhone-Hotspot funktioniert es nicht: das Telefon schickt Anfragen dann
+> bevorzugt über Mobilfunk statt ins eigene Netz.
+>
 > Unter Windows gibt es diesen Teil noch nicht.
+
+### Ganz ohne Rechner
+
+Wer den Mac gar nicht einbeziehen will, kann yt-dlp direkt auf dem iPhone
+laufen lassen — über die kostenlose Terminal-App **a-Shell**, für die es
+auch ein FFmpeg gibt. Das ist eine Anleitung, keine Software:
+**[docs/iphone-ohne-mac.md](docs/iphone-ohne-mac.md)**
 
 <br>
 
